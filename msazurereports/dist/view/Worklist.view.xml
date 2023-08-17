@@ -1,0 +1,350 @@
+<!-- <mvc:View
+    controllerName="convergent.report.msazurereports.controller.Worklist"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:semantic="sap.f.semantic">
+
+    <semantic:SemanticPage
+        id="page"
+        headerPinnable="false"
+        toggleHeaderOnTitleClick="false">
+
+        <semantic:titleHeading>
+            <Title
+                text="{i18n>worklistTitle}"
+                level="H2"/>
+        </semantic:titleHeading>
+
+        <semantic:content>
+            <Table
+                id="table"
+                width="auto"
+                items="{
+                    path: '/WorkItems',
+                    sorter: {
+                        path: 'WorkItemId',
+                        descending: false
+                    }
+                }"
+                noDataText="{worklistView>/tableNoDataText}"
+                busyIndicatorDelay="{worklistView>/tableBusyDelay}"
+                growing="true"
+                growingScrollToLoad="true"
+                updateFinished=".onUpdateFinished">
+
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Title
+                            id="tableHeader"
+                            text="{worklistView>/worklistTableTitle}"
+                            level="H3"/>
+                        <ToolbarSpacer />
+                        <SearchField
+                            id="searchField"
+                            tooltip="{i18n>worklistSearchTooltip}"
+                            search=".onSearch">
+                            <layoutData>
+                                <OverflowToolbarLayoutData
+                                    maxWidth="200px"
+                                    priority="NeverOverflow"/>
+                            </layoutData>
+                        </SearchField>
+                    </OverflowToolbar>
+                </headerToolbar>
+
+                <columns>
+                    <Column id="nameColumn">
+                        <Text text="{i18n>tableNameColumnTitle}"/>
+                    </Column>
+                    <Column>
+                        <Text text="{i18n>tableNameColumnTitle}"/>
+                    </Column>
+                    <Column>
+                        <Text text="{i18n>tableNameColumnTitle}"/>
+                    </Column>
+                    <Column>
+                        <Text text="{i18n>tableNameColumnTitle}"/>
+                    </Column>
+                    <Column>
+                        <Text text="{i18n>tableNameColumnTitle}"/>
+                    </Column>
+                    <Column>
+                        <Text text="{i18n>tableNameColumnTitle}"/>
+                    </Column>
+                    <Column>
+                        <Text text="{i18n>tableNameColumnTitle}"/>
+                    </Column>
+                    <Column id="unitNumberColumn" hAlign="End">
+                        <Text text="{i18n>tableUnitNumberColumnTitle}" id="unitNumberColumnTitle"/>
+                    </Column>
+                </columns>
+
+                <items>
+                    <ColumnListItem                        
+                        press=".onPress">
+                        <cells>
+                            <ObjectIdentifier
+                                title="{WorkItemId}"/>
+                            <Text text="{Title}"/>
+                            <Text text="{Title}"/>
+                            <Text text="{Title}"/>
+                            <Text text="{Title}"/>
+                            <Text text="{Title}"/>
+
+                            <ObjectNumber
+                                number="{
+                                    path: 'RemainingWork',
+                                    formatter: '.formatter.numberUnit'
+                                }"
+                                unit="{Count}" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </semantic:content>
+
+        <semantic:sendEmailAction>
+            <semantic:SendEmailAction id="shareEmail" press=".onShareEmailPress"/>
+        </semantic:sendEmailAction>
+
+    </semantic:SemanticPage>
+
+</mvc:View> -->
+
+<mvc:View
+	controllerName="convergent.report.msazurereports.controller.Worklist"
+	xmlns="sap.ui.table"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:u="sap.ui.unified"
+	xmlns:m="sap.m"
+    height="100%">
+	<m:Page
+        title="Azure Report"
+		showHeader="true"
+		enableScrolling="false">
+		<m:content>
+        <m:IconTabBar
+		id="idIconTabBarMulti"
+		expanded="{device>/isNoPhone}"
+		class="sapUiResponsiveContentPadding">
+		<m:items>
+			<m:IconTabFilter icon="sap-icon://notes" key="info">
+				<Table
+				id="workItemTable"	
+                selectionMode="None"						
+                rows="{path: '/WorkItems', 
+                sorter: {path: 'Iteration/Number',descending: true},
+                parameters: {expand: 'AssignedTo,Area,Iteration'} }">
+				<extension>
+					<m:OverflowToolbar style="Clear">
+						<m:Title id="title" text="Work Items"/>
+						<m:ToolbarSpacer/>						
+						<!-- <m:Button
+							icon="sap-icon://decline"
+							tooltip="Clear all filters"
+							press="clearAllFilters"/> -->
+						<m:ToolbarSeparator/>
+						<m:SearchField
+							placeholder="Filter"
+							value="{ui>/globalFilter}"
+							search="filterGlobally"
+							width="15rem"/>
+					</m:OverflowToolbar>
+				</extension>
+				<columns>
+					<Column		
+                        width="5%"			
+                        sortProperty="WorkItemId">	
+						<m:Label text="Id" />
+						<template>
+							<m:Text wrapping="false" text="{path: 'WorkItemId',type: 'sap.ui.model.type.Integer'}"/>
+						</template>
+					</Column>
+					<Column
+						width="20%"
+						sortProperty="Title">
+						<m:Label text="Title" />
+						<template>
+							<m:Text text="{Title}" wrapping="true" />
+						</template>
+					</Column>
+                    <Column width="15%"
+                    sortProperty="AssignedTo/UserName">
+						<m:Label text="User Name" />
+						<template>
+							<m:Text text="{AssignedTo/UserName}" wrapping="false" />
+						</template>
+					</Column>
+                    <Column						
+						sortProperty="State">
+						<m:Label text="State" />
+						<template>
+							<m:Text text="{State}" wrapping="false" />
+						</template>
+					</Column>
+                     <Column width="15%"						
+						sortProperty="Area/AreaPath">
+						<m:Label text="Area Path" />
+						<template>
+							<m:Text text="{Area/AreaPath}" wrapping="false" />
+						</template>
+					</Column>
+                    <Column	width="15%"					
+						sortProperty="Iteration/Number">
+						<m:Label text="Iteration Path" />
+						<template>
+							<m:Text text="{Iteration/IterationPath}" wrapping="false" />
+						</template>
+					</Column>
+                    <Column						
+						sortProperty="CISPlanning_EstimatedHours">
+						<m:Label text="Estimated Hours" />
+						<template>
+                            <m:Text wrapping="false" text="{path: 'CISPlanning_EstimatedHours',type: 'sap.ui.model.type.Integer'}"/>
+						</template>
+					</Column>
+                     <Column						
+						sortProperty="Effort">
+						<m:Label text="Effort" />
+						<template>							
+                            <m:Text wrapping="false" text="{path: 'Effort',type: 'sap.ui.model.type.Integer'}"/>
+						</template>
+					</Column>
+                    <!-- <Column						
+						sortProperty="RemainingWork">
+						<m:Label text="Remaining Work" />
+						<template>
+                            <m:Text wrapping="false" text="{path: 'RemainingWork',type: 'sap.ui.model.type.Integer'}"/>							
+						</template>
+					</Column> -->
+                       <Column						
+						sortProperty="DueDate">
+						<m:Label text="Due Date" />
+						<template>			
+                        <m:Text text="{
+								path: 'DueDate',
+								type: 'sap.ui.model.type.Date',
+								formatOptions: {source: {pattern: 'dd/MM/yyyy'}}
+							}" wrapping="false" />	
+						</template>
+					</Column>                 
+                    <Column	width="10%"					
+						sortProperty="WorkItemType">
+						<m:Label text="Type" />
+						<template>
+							<m:Text text="{WorkItemType}" wrapping="false" />
+						</template>
+					</Column>
+				</columns>
+			</Table>
+			</m:IconTabFilter>
+
+            <!-- <m:IconTabFilter icon="sap-icon://tree" key="info">
+            <Table
+				id="workItemTreeTable"	
+                selectionMode="None"						
+                rows="{path: '/WorkItems', 
+                sorter: {path: 'Iteration/Number',descending: true},
+                parameters: {expand: 'AssignedTo,Area,Iteration'} }"
+				visibleRowCount="10"
+                enableGrouping="true">
+				<extension>
+					<m:OverflowToolbar style="Clear">
+						<m:Title text="Work Items - Group"/>
+						<m:ToolbarSpacer/>					
+						
+						<m:ToolbarSeparator/>
+						<m:SearchField
+							placeholder="Filter"
+							value="{ui>/globalFilter}"
+							search="filterGlobally"
+							width="15rem"/>
+					</m:OverflowToolbar>
+				</extension>
+				<columns>
+					<Column		
+                        width="5%"			
+                        sortProperty="WorkItemId">	
+						<m:Label text="Id" />
+						<template>
+							<m:Text wrapping="false" text="{path: 'WorkItemId',type: 'sap.ui.model.type.Integer'}"/>
+						</template>
+					</Column>
+					<Column
+						width="15%"
+						sortProperty="Title">
+						<m:Label text="Title" />
+						<template>
+							<m:Text text="{Title}" wrapping="true" />
+						</template>
+					</Column>
+                    <Column width="15%"
+                    sortProperty="AssignedTo/UserName">
+						<m:Label text="User Name" />
+						<template>
+							<m:Text text="{AssignedTo/UserName}" wrapping="false" />
+						</template>
+					</Column>
+                    <Column						
+						sortProperty="State">
+						<m:Label text="State" />
+						<template>
+							<m:Text text="{State}" wrapping="false" />
+						</template>
+					</Column>
+                     <Column width="15%"						
+						sortProperty="Area/AreaPath">
+						<m:Label text="Area Path" />
+						<template>
+							<m:Text text="{Area/AreaPath}" wrapping="false" />
+						</template>
+					</Column>
+                    <Column	width="15%"					
+						sortProperty="Iteration/Number">
+						<m:Label text="Iteration Path" />
+						<template>
+							<m:Text text="{Iteration/IterationPath}" wrapping="false" />
+						</template>
+					</Column>
+                    <Column						
+						sortProperty="CISPlanning_EstimatedHours">
+						<m:Label text="Estimated Hours" />
+						<template>
+                            <m:Text wrapping="false" text="{path: 'CISPlanning_EstimatedHours',type: 'sap.ui.model.type.Integer'}"/>
+						</template>
+					</Column>
+                     <Column						
+						sortProperty="Effort">
+						<m:Label text="Effort" />
+						<template>							
+                            <m:Text wrapping="false" text="{path: 'Effort',type: 'sap.ui.model.type.Integer'}"/>
+						</template>
+					</Column>                    
+                       <Column						
+						sortProperty="DueDate">
+						<m:Label text="Due Date" />
+						<template>			
+                        <m:Text text="{
+								path: 'DueDate',
+								type: 'sap.ui.model.type.Date',
+								formatOptions: {source: {pattern: 'dd/MM/yyyy'}}
+							}" wrapping="false" />	
+						</template>
+					</Column>                 
+                    <Column	width="10%"					
+						sortProperty="WorkItemType">
+						<m:Label text="Type" />
+						<template>
+							<m:Text text="{WorkItemType}" wrapping="false" />
+						</template>
+					</Column>
+				</columns>
+			</Table>
+            </m:IconTabFilter> -->
+		</m:items>
+	</m:IconTabBar>
+			
+            
+		</m:content>
+	</m:Page>
+</mvc:View>
